@@ -4,7 +4,7 @@ namespace Common.Core
 {
     public abstract class AAgent<TGame, TGameState>
         where TGame : AGame<TGameState>
-        where TGameState : ICloneable
+        where TGameState : AGameState<TGameState>
     {
         #region Champs
 
@@ -17,7 +17,7 @@ namespace Common.Core
         /// <summary>
         /// Constructeur de la classe
         /// </summary>
-        /// <param name="game">Jeu à utiliser</param>
+        /// <param name="game">Jeu ï¿½ utiliser</param>
         public AAgent(TGame game)
         {
             this._game = game;
@@ -25,22 +25,22 @@ namespace Common.Core
 
         #endregion
 
-        #region Méthodes publiques
+        #region Mï¿½thodes publiques
 
         /// <summary>
-        /// Restaure l'état par défaut de l'agent
+        /// Restaure l'ï¿½tat par dï¿½faut de l'agent
         /// </summary>
         public virtual void Reset() { }
 
         #endregion
 
-        #region Méthodes publiques abstraites
+        #region Mï¿½thodes publiques abstraites
 
         /// <summary>
-        /// Donne une action à jouer
+        /// Donne une action ï¿½ jouer
         /// </summary>
         /// <param name="state">Etat de jeu actuel</param>
-        /// <returns>L'action à jouer</returns>
+        /// <returns>L'action ï¿½ jouer</returns>
         public abstract AGameAction<TGameState> GetAction(TGameState state);
 
         #endregion

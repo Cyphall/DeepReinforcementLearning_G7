@@ -7,7 +7,7 @@ namespace Common.Agent
 {
     public sealed class RandomAgent<TGame, TGameState> : AAgent<TGame, TGameState>
         where TGame : AGame<TGameState>
-        where TGameState : ICloneable
+        where TGameState : AGameState<TGameState>
     {
         #region Constructeur
 
@@ -26,7 +26,7 @@ namespace Common.Agent
         /// </summary>
         /// <param name="state">Etat de jeu actuel</param>
         /// <returns>L'action à jouer</returns>
-        override public AGameAction<TGameState> GetAction(TGameState state) => this._game.Actions[Random.Range(0, this._game.Actions.Count)];
+        public override AGameAction<TGameState> GetAction(TGameState state) => this._game.Actions[Random.Range(0, this._game.Actions.Count)];
 
         #endregion
     }

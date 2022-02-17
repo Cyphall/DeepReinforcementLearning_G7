@@ -5,7 +5,7 @@ using UnityEngine.WSA;
 
 // ReSharper disable StringLiteralTypo
 
-namespace GridWorld.Scripts
+namespace GridWorld
 {
     public class LevelManager : MonoBehaviour
     {
@@ -15,11 +15,11 @@ namespace GridWorld.Scripts
 
         private void Start()
         {
-            for (int x = 0; x < level.Grid.Width; ++x)
+            for (int x = 0; x < level.Grid.GetLength(0); ++x)
             {
-                for (int y = 0; y < level.Grid.Height; ++y)
+                for (int y = 0; y < level.Grid.GetLength(1); ++y)
                 {
-                    TileType tileType = level.Grid.GridTiles[x, y];
+                    TileType tileType = level.Grid[x, y];
                     GameObject prefab = null;
                     foreach (var tile in TileToPrefabs)
                     {

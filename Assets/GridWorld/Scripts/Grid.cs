@@ -3,41 +3,37 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-struct GameState : ICloneable
+namespace GridWorld
 {
-    
-    
-    public object Clone()
+    public enum TileType
     {
-        return null;
-    }
-}
-
-public enum TileType
-{
-    Ground,
-    Wall,
-    Hole,
-    Goal,
-}
-public class Grid
-{
-    public int Width { get; set; } = 5;
-    public int Height { get; set; } = 5;
-
-    public TileType[,] GridTiles;
-
-    public Grid(int width, int height)
-    {
-        Width = width;
-        Height = height;
-        GridTiles = new TileType[Width, Height];
+        Ground,
+        Wall,
+        Hole,
+        Goal,
     }
 
+    public class Grid
+    {
+        public int Width => GridTiles.GetLength(0);
+        public int Height => GridTiles.GetLength(1);
+
+        public TileType[,] GridTiles;
+        
+        public TileType this[int x, int y]
+        {
+            get => GridTiles[x, y];
+            set => GridTiles[x, y] = value;
+        }
+
+        public Grid(int width, int height)
+        {
+            GridTiles = new TileType[Width, Height];
+        }
+
+    }
+
 }
-
-
-
 
 
 

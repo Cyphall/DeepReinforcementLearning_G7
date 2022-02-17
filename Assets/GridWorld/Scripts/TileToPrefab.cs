@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace GridWorld.Scripts
+namespace GridWorld
 {
     [Serializable]
     public struct TileToPrefab 

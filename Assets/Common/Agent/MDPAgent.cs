@@ -8,7 +8,7 @@ using Random = UnityEngine.Random;
 namespace Common.Agent
 {
     public struct StateData<TGameState>
-        where TGameState : ICloneable
+        where TGameState : AGameState<TGameState>
     {
         #region Propriétés
 
@@ -59,7 +59,7 @@ namespace Common.Agent
 
     public sealed class MDPAgent<TGame, TGameState> : AAgent<TGame, TGameState>
         where TGame : AGame<TGameState>
-        where TGameState : ICloneable
+        where TGameState : AGameState<TGameState>
     {
         #region Champs
 
