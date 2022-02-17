@@ -17,7 +17,7 @@ namespace Common.Core
         /// <summary>
         /// Constructeur de la classe
         /// </summary>
-        /// <param name="game">Jeu � utiliser</param>
+        /// <param name="game">Jeu à utiliser</param>
         public AAgent(TGame game)
         {
             this._game = game;
@@ -25,22 +25,22 @@ namespace Common.Core
 
         #endregion
 
-        #region M�thodes publiques
+        #region Méthodes publiques
 
         /// <summary>
-        /// Restaure l'�tat par d�faut de l'agent
+        /// Restaure l'état par défaut de l'agent
         /// </summary>
         public virtual void Reset() { }
 
         #endregion
 
-        #region M�thodes publiques abstraites
+        #region Méthodes publiques abstraites
 
         /// <summary>
-        /// Donne une action � jouer
+        /// Donne une action à jouer
         /// </summary>
         /// <param name="state">Etat de jeu actuel</param>
-        /// <returns>L'action � jouer</returns>
+        /// <returns>L'action à jouer</returns>
         public abstract AGameAction<TGameState> GetAction(TGameState state);
 
         #endregion
