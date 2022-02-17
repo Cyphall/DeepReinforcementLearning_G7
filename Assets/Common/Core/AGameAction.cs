@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Common
+namespace Common.Core
 {
     public abstract class AGameAction<TGameState>
         where TGameState : ICloneable

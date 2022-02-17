@@ -1,6 +1,6 @@
 using System;
 
-namespace Common
+namespace Common.Core
 {
     public abstract class AAgent<TGame, TGameState>
         where TGame : AGame<TGameState>
@@ -25,18 +25,23 @@ namespace Common
 
         #endregion
 
+        #region Méthodes publiques
+
+        /// <summary>
+        /// Restaure l'état par défaut de l'agent
+        /// </summary>
+        public virtual void Reset() { }
+
+        #endregion
+
         #region Méthodes publiques abstraites
 
         /// <summary>
         /// Donne une action à jouer
         /// </summary>
+        /// <param name="state">Etat de jeu actuel</param>
         /// <returns>L'action à jouer</returns>
-        public abstract AGameAction<TGameState> GetAction();
-
-        /// <summary>
-        /// Restaure l'état par défaut de l'agent
-        /// </summary>
-        public abstract void Reset();
+        public abstract AGameAction<TGameState> GetAction(TGameState state);
 
         #endregion
     }

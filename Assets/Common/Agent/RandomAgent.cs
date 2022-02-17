@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Common.Core;
+using System;
 
 using Random = UnityEngine.Random;
 
@@ -23,15 +24,9 @@ namespace Common.Agent
         /// <summary>
         /// Donne une action à jouer
         /// </summary>
+        /// <param name="state">Etat de jeu actuel</param>
         /// <returns>L'action à jouer</returns>
-        override public AGameAction<TGameState> GetAction() => this._game.Actions[Random.Range(0, this._game.Actions.Length)];
-
-        /// <summary>
-        /// Restaure l'état par défaut de l'agent
-        /// </summary>
-        public override void Reset()
-        {
-        }
+        override public AGameAction<TGameState> GetAction(TGameState state) => this._game.Actions[Random.Range(0, this._game.Actions.Count)];
 
         #endregion
     }
