@@ -7,7 +7,7 @@ using Random = UnityEngine.Random;
 
 namespace Common.Agent
 {
-    public struct StateData<TGameState>
+    /*public struct StateData<TGameState>
         where TGameState : AGameState<TGameState>
     {
         #region Propriétés
@@ -131,5 +131,5 @@ namespace Common.Agent
         }
 
         #endregion
-    }
+    }*/
 }

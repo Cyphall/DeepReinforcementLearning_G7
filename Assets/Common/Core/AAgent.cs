@@ -2,15 +2,9 @@ using System;
 
 namespace Common.Core
 {
-    public abstract class AAgent<TGame, TGameState>
-        where TGame : AGame<TGameState>
+    public abstract class AAgent<TGameState>
         where TGameState : AGameState<TGameState>
     {
-        #region Champs
-
-        protected TGame _game;
-
-        #endregion
 
         #region Constructeur
 
@@ -18,9 +12,9 @@ namespace Common.Core
         /// Constructeur de la classe
         /// </summary>
         /// <param name="game">Jeu à utiliser</param>
-        public AAgent(TGame game)
+        protected AAgent()
         {
-            this._game = game;
+           
         }
 
         #endregion

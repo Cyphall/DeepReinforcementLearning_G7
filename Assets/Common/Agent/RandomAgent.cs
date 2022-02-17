@@ -5,7 +5,7 @@ using Random = UnityEngine.Random;
 
 namespace Common.Agent
 {
-    public sealed class RandomAgent<TGame, TGameState> : AAgent<TGame, TGameState>
+    /*public sealed class RandomAgent<TGame, TGameState> : AAgent<TGame, TGameState>
         where TGame : AGame<TGameState>
         where TGameState : AGameState<TGameState>
     {
@@ -29,5 +29,5 @@ namespace Common.Agent
         public override AGameAction<TGameState> GetAction(TGameState state) => this._game.Actions[Random.Range(0, this._game.Actions.Count)];
 
         #endregion
-    }
+    }*/
 }
