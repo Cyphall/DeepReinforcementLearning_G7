@@ -1,5 +1,4 @@
 ﻿using Common.Core;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -57,7 +56,7 @@ namespace Common.Agent
         #endregion
     }
 
-    public sealed class MDPAgent<TGame, TGameState> : AAgent<TGame, TGameState>
+    public class MDPAgent<TGame, TGameState> : AAgent<TGame, TGameState>
         where TGame : AGame<TGameState>
         where TGameState : AGameState<TGameState>
     {
@@ -73,7 +72,7 @@ namespace Common.Agent
         /// Constructeur de la classe
         /// </summary>
         /// <param name="game">Jeu à utiliser</param>
-        public MDPAgent(TGame game, TGameState initialGameState, float baseStateValue) : base(game)
+        public MDPAgent(TGame game, TGameState initialGameState, float baseStateValue = 0f) : base(game)
         {
             this.InitializePossibleStates(initialGameState, baseStateValue);
         }
