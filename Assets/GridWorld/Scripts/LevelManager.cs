@@ -11,6 +11,8 @@ namespace GridWorld
     {
         public List<TileToPrefab> TileToPrefabs;
 
+        public GameObject playerPrefab;
+
         public LevelPreset level;
 
         private void Start()
@@ -23,13 +25,15 @@ namespace GridWorld
                     GameObject prefab = null;
                     foreach (var tile in TileToPrefabs)
                     {
+
                         if (tile.TileType == tileType)
                         {
-                            Instantiate(tile.Prefab, new Vector3(x, 0, y), Quaternion.identity);
+                            Instantiate(tile.Prefab, new Vector3(x, tile.Prefab.transform.position.y, y), Quaternion.identity);
                         }
                     }
                 }
             }
+            Instantiate(playerPrefab, new Vector3(level.StartPosition.X, playerPrefab.transform.position.y, level.StartPosition.Y), Quaternion.identity);
         }
     }
 }
