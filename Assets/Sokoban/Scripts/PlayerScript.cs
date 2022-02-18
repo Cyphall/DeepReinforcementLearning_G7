@@ -1,6 +1,7 @@
 ﻿using Common.Core;
 using Sokoban.Agent;
 using System.Collections.Generic;
+using Common.Enumeration;
 using UnityEngine;
 
 namespace Sokoban
@@ -14,8 +15,8 @@ namespace Sokoban
 
 		private void Update()
 		{
-			if (GameManager.GetStatus() != GameStatus.Playing)
-				return;
+			if (GameManager.GameState.Status != GameStatus.Playing) return;
+
 			AGameAction<GameState> action = _agent.GetAction(GameManager.GameState);
 			if (action != null)
 			{

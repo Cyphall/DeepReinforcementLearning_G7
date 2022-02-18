@@ -66,10 +66,15 @@ namespace GridWorld
         {
             Vector2Int agentPos = GameState.AgentPos;
             _player.transform.position = new Vector3(agentPos.x, _player.transform.position.y, agentPos.y);
-            if(GetStatus() == GameStatus.Win)
+            GameStatus status = GameState.Status;
+
+            if(status == GameStatus.Win)
                 displayText.SetActive(true);
-            else if (GetStatus() == GameStatus.Lose)
-                displayText.GetComponent<Text>().text = "Agent Lost";
+            if (status == GameStatus.Lose)
+            {
+                displayText.GetComponent<Text>().text = "Agent lose";
+                displayText.SetActive(true);
+            }
         }
     }
 }
