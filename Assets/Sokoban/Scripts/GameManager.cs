@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Common.Core;
+using Common.Enumeration;
 using UnityEngine;
 
 namespace Sokoban
@@ -55,21 +56,9 @@ namespace Sokoban
             Camera.main.transform.position = new Vector3(width / 2.0f, 10, height / 2.0f);
         }
         
-        public GameStatus GetStatus()
-        {
-            /* TODO check if each crate is on a button 
-            return GameState.Grid[GameState.AgentPos.x, GameState.AgentPos.y] switch
-            {
-                TileType.Hole => GameStatus.Lose,
-                TileType.Goal => GameStatus.Win,
-                _ => GameStatus.Playing
-            };*/
-            return GameStatus.Playing;
-        }
-
         public void FixedUpdate()
         {
-            if (GetStatus() != GameStatus.Playing)
+            if (GameState.Status != GameStatus.Playing)
             {
                 //c la f1 du mond
             }

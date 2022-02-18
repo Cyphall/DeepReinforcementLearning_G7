@@ -1,12 +1,13 @@
 ﻿using Common.Core;
 using Sokoban.Agent;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Sokoban
 {
 	public class PlayerScript : MonoBehaviour
 	{
-		private PlayerAgent _agent = new PlayerAgent();
+		private PlayerAgent _agent = new PlayerAgent(new List<AGameAction<GameState>>());
 		public GameManager GameManager { get; set; }
 
 		private AGameAction<GameState> _nextAction;

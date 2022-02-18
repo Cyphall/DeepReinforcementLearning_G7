@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using Common.Agent.MDP;
 using Common.Core;
+using Common.Enumeration;
 using UnityEngine;
 
 namespace GridWorld
@@ -17,7 +19,7 @@ namespace GridWorld
         /// </summary>
         public GameState GameState { get; private set; }
 
-        private void Start()
+        private void Awake()
         {
             for (int x = 0; x < _levelPreset.Grid.GetLength(0); ++x)
             {
@@ -48,27 +50,15 @@ namespace GridWorld
             Camera.main.transform.position = new Vector3(width / 2.0f, 10, height / 2.0f);
         }
         
-        public GameStatus GetStatus()
-        {
-            return GameState.Grid[GameState.AgentPos.x, GameState.AgentPos.y] switch
-            {
-                TileType.Hole => GameStatus.Lose,
-                TileType.Goal => GameStatus.Win,
-                _ => GameStatus.Playing
-            };
-        }
-
         public void FixedUpdate()
         {
-            if (GetStatus() != GameStatus.Playing)
-            {
-                //c la f1 du mond
-            }
+
         }
 
         public void ApplyAction(AGameAction<GameState> action)
         {
-            GameState = action.Apply(GameState.Copy());
+            if (GameState.Status == GameStatus.Playing)
+                GameState = action.Apply(GameState.Copy());
         }
 
         public void Update()

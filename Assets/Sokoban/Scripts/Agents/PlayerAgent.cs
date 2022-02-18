@@ -1,14 +1,12 @@
 ﻿using Common.Core;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Sokoban.Agent
 {
 	public class PlayerAgent : AAgent<GameState>
 	{
-		public PlayerAgent() : base()
-		{
-			
-		}
+		public PlayerAgent(List<AGameAction<GameState>> actions) : base(actions) { }
 
 		public override AGameAction<GameState> GetAction(GameState state)
 		{

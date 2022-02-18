@@ -1,6 +1,5 @@
-﻿using System;
-using System.Numerics;
-using Common.Core;
+﻿using Common.Core;
+using Common.Enumeration;
 using UnityEngine;
 
 namespace GridWorld
@@ -18,5 +17,12 @@ namespace GridWorld
                 AgentPos = AgentPos
             };
         }
+
+        public override GameStatus Status => this.Grid[this.AgentPos.x, this.AgentPos.y] switch
+        {
+            TileType.Hole => GameStatus.Lose,
+            TileType.Goal => GameStatus.Win,
+            _ => GameStatus.Playing
+        };
     }
 }
