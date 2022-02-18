@@ -12,14 +12,16 @@ namespace GridWorld
 
         private AGameAction<GameState> _nextAction;
 
-        private void Update()
-        {
-            AGameAction<GameState> action = _agent.GetAction(GameManager.GameState);
-            if (action != null)
-            {
-                _nextAction = action;
-            }
-        }
+		private void Update()
+		{
+			if (GameManager.GetStatus() != GameStatus.Playing)
+				return;
+			AGameAction<GameState> action = _agent.GetAction(GameManager.GameState);
+			if (action != null)
+			{
+				_nextAction = action;
+			}
+		}
 
         private void FixedUpdate()
         {

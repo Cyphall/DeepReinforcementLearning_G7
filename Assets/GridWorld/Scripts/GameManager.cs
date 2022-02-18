@@ -3,6 +3,7 @@ using Common.Agent.MDP;
 using Common.Core;
 using Common.Enumeration;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace GridWorld
 {
@@ -11,7 +12,7 @@ namespace GridWorld
         public List<TileToPrefab> TileToPrefabs;
         public GameObject playerPrefab;
         public ALevelPreset _levelPreset;
-
+        public GameObject displayText;
         private PlayerScript _player;
 
         /// <summary>
@@ -65,6 +66,10 @@ namespace GridWorld
         {
             Vector2Int agentPos = GameState.AgentPos;
             _player.transform.position = new Vector3(agentPos.x, _player.transform.position.y, agentPos.y);
+            if(GetStatus() == GameStatus.Win)
+                displayText.SetActive(true);
+            else if (GetStatus() == GameStatus.Lose)
+                displayText.GetComponent<Text>().text = "Agent Lost";
         }
     }
 }
