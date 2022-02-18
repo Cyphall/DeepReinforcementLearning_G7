@@ -1,18 +1,14 @@
 ﻿using Common.Core;
+using UnityEngine;
 
 namespace Sokoban
 {
-    public class MoveRight : AGameAction<GameState>
-    {   
-        public override GameState Apply(GameState state)
-        {
-            if (state.Grid[state.AgentPos.x + 1, state.AgentPos.y] == TileType.Wall)
-            {
-                return state;
-            }
-            
-            state.AgentPos.x += 1;
-            return state;
-        }
-    }
+	public class MoveRight : Move
+	{
+		public override GameState Apply(GameState state)
+		{
+			Vector2Int direction = new Vector2Int(1, 0);
+			return ApplyMovement(state, direction);
+		}
+	}
 }
