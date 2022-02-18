@@ -1,4 +1,5 @@
 ﻿using Common.Core;
+using Common.Enumeration;
 using GridWorld.Agent;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,8 +15,8 @@ namespace GridWorld
 
 		private void Update()
 		{
-			if (GameManager.GetStatus() != GameStatus.Playing)
-				return;
+			if (GameManager.GameState.Status != GameStatus.Playing) return;
+
 			AGameAction<GameState> action = _agent.GetAction(GameManager.GameState);
 			if (action != null)
 			{

@@ -9,7 +9,7 @@ namespace GridWorld
         public TileType[,] Grid;
         public Vector2Int AgentPos;
         
-        public override GameState Copy()
+        public GameState Copy()
         {
             return new GameState
             {
@@ -18,7 +18,7 @@ namespace GridWorld
             };
         }
 
-        public override GameStatus Status => this.Grid[this.AgentPos.x, this.AgentPos.y] switch
+        public GameStatus Status => this.Grid[this.AgentPos.x, this.AgentPos.y] switch
         {
             TileType.Hole => GameStatus.Lose,
             TileType.Goal => GameStatus.Win,

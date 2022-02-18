@@ -33,7 +33,7 @@ namespace Sokoban
             return false;
         }
 
-        public override GameState Copy()
+        public GameState Copy()
         {
             return new GameState
             {
@@ -44,7 +44,7 @@ namespace Sokoban
             };
         }
 
-        public override GameStatus Status
+        public GameStatus Status
         {
             get
             {
