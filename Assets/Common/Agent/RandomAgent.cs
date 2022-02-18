@@ -5,7 +5,7 @@ using Random = UnityEngine.Random;
 namespace Common.Agent
 {
     public class RandomAgent<TGameState> : AAgent<TGameState>
-        where TGameState : AGameState<TGameState>
+        where TGameState : IGameState<TGameState>
     {
         #region Constructeur
 

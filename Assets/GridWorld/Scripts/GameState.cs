@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace GridWorld
 {
-    public class GameState : AGameState<GameState>
+    public class GameState : IGameState<GameState>
     {
         public TileType[,] Grid;
         public Vector2Int AgentPos;

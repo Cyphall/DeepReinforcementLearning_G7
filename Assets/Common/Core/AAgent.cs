@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Common.Core
 {
     public abstract class AAgent<TGameState>
-        where TGameState : AGameState<TGameState>
+        where TGameState : IGameState<TGameState>
     {
         #region Champs
 

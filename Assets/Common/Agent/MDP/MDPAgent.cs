@@ -9,7 +9,7 @@ using Random = UnityEngine.Random;
 namespace Common.Agent.MDP
 {
     public class MDPAgent<TGameState> : AAgent<TGameState>
-        where TGameState : AGameState<TGameState>
+        where TGameState : IGameState<TGameState>
     {
         #region Champs
 

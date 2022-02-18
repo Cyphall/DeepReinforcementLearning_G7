@@ -6,7 +6,7 @@ namespace Common.Core
     /// Représente un état de jeu copiable
     /// </summary>
     /// <typeparam name="TDerived">Etat de jeu à copier</typeparam>
-    public abstract class AGameState<TDerived>
+    public abstract class IGameState<TDerived>
     {
         /// <summary>
         /// Clone l'état de jeu

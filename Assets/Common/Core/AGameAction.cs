@@ -3,7 +3,7 @@
 namespace Common.Core
 {
     public abstract class AGameAction<TGameState>
-        where TGameState : AGameState<TGameState>
+        where TGameState : IGameState<TGameState>
     {
         /// <summary>
         /// Met à jour l'état de jeu fourni en exécutant une action
