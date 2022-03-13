@@ -73,6 +73,8 @@ namespace Common.Agent.DP
 
             this.InitializePossibleStates(initialGameState, baseStateValue);
             this.EvaluatePolicy();
+
+            // Fin de l'entraînement
         }
 
         #endregion

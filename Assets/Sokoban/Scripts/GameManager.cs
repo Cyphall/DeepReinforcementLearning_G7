@@ -1,5 +1,7 @@
-﻿using Common.Core;
+﻿using Common.Agent.DP;
+using Common.Core;
 using Common.Enumeration;
+using Sokoban.Agent.Plugin;
 using Sokoban.Game;
 using System.Collections.Generic;
 using UnityEngine;
@@ -18,6 +20,8 @@ namespace Sokoban
         private PlayerScript _player;
         private List<GameObject> _crateInstances = new List<GameObject>();
         private ALevelPreset _levelPreset;
+        private MDPPolicyAgent<GameState, GameRules> _agent;
+        private int _playFrames = 0;
 
         public readonly GameRules GameRules = new GameRules();
 
@@ -59,10 +63,23 @@ namespace Sokoban
                 CratePos = _levelPreset.CrateStartPosition
             };
 
+            this._agent = new MDPPolicyAgent<GameState, GameRules>(this.GameRules, new BaseAgentPlugin());
+            this._agent.Initialize(this.GameState);
+
             int width = GameState.Grid.GetLength(0);
             int height = GameState.Grid.GetLength(1);
 
             Camera.main.transform.position = new Vector3(width / 2.0f, 10, height / 2.0f);
+        }
+
+        public void FixedUpdate()
+        {
+            if (GameState.Status == GameStatus.Playing && this._playFrames > 30)
+            {
+                this.ApplyAction(this._agent.GetAction(this.GameState));
+                this._playFrames = 0;
+            }
+            ++this._playFrames;
         }
 
         public void ApplyAction(AGameAction<GameState> action)

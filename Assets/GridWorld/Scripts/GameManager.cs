@@ -1,5 +1,7 @@
-﻿using Common.Core;
+﻿using Common.Agent.DP;
+using Common.Core;
 using Common.Enumeration;
+using GridWorld.Agent.Plugin;
 using GridWorld.Game;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,8 +16,11 @@ namespace GridWorld
         public ALevelPreset _levelPreset;
         public GameObject displayText;
         private PlayerScript _player;
+        private MDPPolicyAgent<GameState, GameRules> _agent;
 
         public readonly GameRules GameRules = new GameRules();
+
+        private int _playFrames = 0;
 
         /// <summary>
         /// Obtient l'état du jeu actuel
@@ -47,6 +52,9 @@ namespace GridWorld
                 AgentPos = _levelPreset.StartPosition
             };
 
+            this._agent = new MDPPolicyAgent<GameState, GameRules>(this.GameRules, new BaseAgentPlugin());
+            this._agent.Initialize(this.GameState);
+
             int width = GameState.Grid.GetLength(0);
             int height = GameState.Grid.GetLength(1);
 
@@ -55,6 +63,12 @@ namespace GridWorld
 
         public void FixedUpdate()
         {
+            if (GameState.Status == GameStatus.Playing && this._playFrames > 30)
+            {
+                this.ApplyAction(this._agent.GetAction(this.GameState));
+                this._playFrames = 0;
+            }
+            ++this._playFrames;
         }
 
         public void ApplyAction(AGameAction<GameState> action)
