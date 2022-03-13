@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Common.Core
+﻿namespace Common.Core
 {
     public abstract class AGameAction<TGameState>
         where TGameState : IGameState<TGameState>

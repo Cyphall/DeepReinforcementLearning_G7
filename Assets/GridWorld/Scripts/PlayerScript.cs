@@ -1,28 +1,34 @@
 ﻿using Common.Core;
 using Common.Enumeration;
 using GridWorld.Agent;
-using System.Collections.Generic;
+using GridWorld.Game;
 using UnityEngine;
 
 namespace GridWorld
 {
     public class PlayerScript : MonoBehaviour
     {
-        private PlayerAgent _agent = new PlayerAgent(new List<AGameAction<GameState>>());
+        private PlayerAgent _agent;
+
         public GameManager GameManager { get; set; }
 
         private AGameAction<GameState> _nextAction;
 
-		private void Update()
-		{
-			if (GameManager.GameState.Status != GameStatus.Playing) return;
+        private void Start()
+        {
+            this._agent = new PlayerAgent(this.GameManager.GameRules);
+        }
 
-			AGameAction<GameState> action = _agent.GetAction(GameManager.GameState);
-			if (action != null)
-			{
-				_nextAction = action;
-			}
-		}
+        private void Update()
+        {
+            if (GameManager.GameState.Status != GameStatus.Playing) return;
+
+            AGameAction<GameState> action = _agent.GetAction(GameManager.GameState);
+            if (action != null)
+            {
+                _nextAction = action;
+            }
+        }
 
         private void FixedUpdate()
         {
@@ -33,7 +39,7 @@ namespace GridWorld
             }
             else
             {
-                GameManager.ApplyAction(new Wait());
+                GameManager.ApplyAction(this.GameManager.GameRules.Wait);
             }
         }
     }

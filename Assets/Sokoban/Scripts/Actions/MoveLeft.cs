@@ -1,15 +1,15 @@
-﻿using Common.Core;
+﻿using Sokoban.Game;
 using UnityEngine;
 
-namespace Sokoban
+namespace Sokoban.Actions
 {
-	public class MoveLeft : Move
-	{
-		public override GameState Apply(GameState state)
-		{
-			Vector2Int direction = new Vector2Int(-1, 0);
+    public class MoveLeft : Move
+    {
+        public override GameState Apply(GameState state)
+        {
+            Vector2Int direction = new Vector2Int(-1, 0);
 
-			return ApplyMovement(state, direction);
-		}
-	}
+            return ApplyMovement(state, direction);
+        }
+    }
 }

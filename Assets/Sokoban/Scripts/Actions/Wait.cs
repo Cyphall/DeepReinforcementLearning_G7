@@ -1,13 +1,12 @@
-﻿using Common.Core;
-using UnityEngine;
+﻿using Sokoban.Game;
 
-namespace Sokoban
+namespace Sokoban.Actions
 {
-	public class Wait : Move
-	{
-		public override GameState Apply(GameState state)
-		{
-			return state;
-		}
-	}
+    public class Wait : Move
+    {
+        public override GameState Apply(GameState state)
+        {
+            return state;
+        }
+    }
 }

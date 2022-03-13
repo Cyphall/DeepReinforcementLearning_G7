@@ -1,10 +1,10 @@
 ﻿namespace GridWorld
 {
-	public enum TileType
-	{
-		Ground,
-		Wall,
-		Hole,
-		Goal,
-	}
+    public enum TileType
+    {
+        Ground,
+        Wall,
+        Hole,
+        Goal,
+    }
 }

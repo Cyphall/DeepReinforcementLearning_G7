@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Numerics;
-using Common.Core;
+﻿using Common.Core;
 using Common.Enumeration;
+using System.Collections.Generic;
 using UnityEngine;
 
-namespace Sokoban
+namespace Sokoban.Game
 {
     public class GameState : IGameState<GameState>
     {
@@ -13,7 +11,7 @@ namespace Sokoban
         public Vector2Int AgentPos;
         public Vector2Int[] CratePos;
         public int CurrentIteration = 0;
-        public int NbMaxIteration = 10000; // <-- peut être a stocker coté jeu plutot? 
+        public int NbMaxIteration = 10000;
 
         public bool AnyEntity(int x, int y)
         {
@@ -37,10 +35,11 @@ namespace Sokoban
         {
             return new GameState
             {
-                Grid = (TileType[,])Grid.Clone(),
+                Grid = Grid,
                 AgentPos = AgentPos,
-                CratePos = CratePos,
-                CurrentIteration = CurrentIteration
+                CratePos = (Vector2Int[])CratePos.Clone(),
+                CurrentIteration = CurrentIteration,
+                NbMaxIteration = NbMaxIteration,
             };
         }
 
@@ -87,6 +86,22 @@ namespace Sokoban
             if (nbValidButtons == buttonsPos.Length)
                 return true;
             return false;
+        }
+
+        public bool Equals(GameState other)
+        {
+            if (other == null ||
+                this.CratePos.Length != other.CratePos.Length ||
+                this.AgentPos != other.AgentPos)
+                return false;
+
+            for (int i = 0; i < this.CratePos.Length; ++i)
+            {
+                if (this.CratePos[i] != other.CratePos[i])
+                    return false;
+            }
+
+            return true;
         }
     }
 }

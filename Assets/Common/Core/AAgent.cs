@@ -1,14 +1,17 @@
-using System;
-using System.Collections.Generic;
-
 namespace Common.Core
 {
-    public abstract class AAgent<TGameState>
+    /// <summary>
+    /// Classe abstraite représentant un agent de jeu
+    /// </summary>
+    /// <typeparam name="TGameState">Type d'état du jeu utilisé</typeparam>
+    /// <typeparam name="TGameRules">Règles de jeu utilisées</typeparam>
+    public abstract class AAgent<TGameState, TGameRules>
         where TGameState : IGameState<TGameState>
+        where TGameRules : AGameRules<TGameState>
     {
         #region Champs
 
-        protected readonly List<AGameAction<TGameState>> _actions;
+        protected readonly TGameRules _rules;
 
         #endregion
 
@@ -17,9 +20,10 @@ namespace Common.Core
         /// <summary>
         /// Constructeur de la classe
         /// </summary>
-        public AAgent(List<AGameAction<TGameState>> actions)
+        /// <param name="rules">Règles du jeu</param>
+        public AAgent(TGameRules rules)
         {
-            this._actions = actions;
+            this._rules = rules;
         }
 
         #endregion

@@ -1,33 +1,33 @@
 ﻿using Common.Core;
-using System.Collections.Generic;
+using GridWorld.Game;
 using UnityEngine;
 
 namespace GridWorld.Agent
 {
-    public class PlayerAgent : AAgent<GameState>
+    public class PlayerAgent : AAgent<GameState, GameRules>
     {
-        public PlayerAgent(List<AGameAction<GameState>> actions) : base(actions) { }
+        #region Constructeur
+
+        public PlayerAgent(GameRules rules) : base(rules) { }
+
+        #endregion
+
+        #region Méthodes publiques 
 
         public override AGameAction<GameState> GetAction(GameState gameState)
         {
             if (Input.GetKeyDown(KeyCode.Z))
-            {
-                return new MoveUp();
-            }
+                return this._rules.MoveUp;
             if (Input.GetKeyDown(KeyCode.Q))
-            {
-                return new MoveLeft();
-            }
+                return this._rules.MoveLeft;
             if (Input.GetKeyDown(KeyCode.S))
-            {
-                return new MoveDown();
-            }
+                return this._rules.MoveDown;
             if (Input.GetKeyDown(KeyCode.D))
-            {
-                return new MoveRight();
-            }
+                return this._rules.MoveRight;
 
             return null;
         }
+
+        #endregion
     }
 }

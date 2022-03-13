@@ -1,4 +1,5 @@
 ﻿using Common.Enumeration;
+using System;
 
 namespace Common.Core
 {
@@ -6,7 +7,7 @@ namespace Common.Core
     /// Représente un état de jeu copiable
     /// </summary>
     /// <typeparam name="TDerived">Etat de jeu à copier</typeparam>
-    public interface IGameState<TDerived>
+    public interface IGameState<TDerived> : IEquatable<TDerived>
     {
         /// <summary>
         /// Clone l'état de jeu

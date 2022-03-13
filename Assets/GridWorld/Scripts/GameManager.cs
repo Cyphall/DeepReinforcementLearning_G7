@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using Common.Agent.MDP;
-using Common.Core;
+﻿using Common.Core;
 using Common.Enumeration;
+using GridWorld.Game;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,8 +15,10 @@ namespace GridWorld
         public GameObject displayText;
         private PlayerScript _player;
 
+        public readonly GameRules GameRules = new GameRules();
+
         /// <summary>
-        /// Stocke l'état du jeu actuel
+        /// Obtient l'état du jeu actuel
         /// </summary>
         public GameState GameState { get; private set; }
 
@@ -44,16 +46,15 @@ namespace GridWorld
                 Grid = _levelPreset.Grid,
                 AgentPos = _levelPreset.StartPosition
             };
-            
+
             int width = GameState.Grid.GetLength(0);
             int height = GameState.Grid.GetLength(1);
 
             Camera.main.transform.position = new Vector3(width / 2.0f, 10, height / 2.0f);
         }
-        
+
         public void FixedUpdate()
         {
-
         }
 
         public void ApplyAction(AGameAction<GameState> action)
@@ -66,9 +67,9 @@ namespace GridWorld
         {
             Vector2Int agentPos = GameState.AgentPos;
             _player.transform.position = new Vector3(agentPos.x, _player.transform.position.y, agentPos.y);
-            if(GetStatus() == GameStatus.Win)
+            if (GameState.Status == GameStatus.Win)
                 displayText.SetActive(true);
-            else if (GetStatus() == GameStatus.Lose)
+            else if (GameState.Status == GameStatus.Lose)
                 displayText.GetComponent<Text>().text = "Agent Lost";
         }
     }

@@ -1,9 +1,9 @@
 ﻿namespace Sokoban
 {
-	public enum TileType
-	{
-		Ground,
-		Wall,
-		Button,
-	}
+    public enum TileType
+    {
+        Ground,
+        Wall,
+        Button,
+    }
 }

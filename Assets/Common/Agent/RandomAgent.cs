@@ -1,15 +1,17 @@
 ﻿using Common.Core;
 using System.Collections.Generic;
+
 using Random = UnityEngine.Random;
 
 namespace Common.Agent
 {
-    public class RandomAgent<TGameState> : AAgent<TGameState>
+    public class RandomAgent<TGameState, TGameRules> : AAgent<TGameState, TGameRules>
         where TGameState : IGameState<TGameState>
+        where TGameRules : AGameRules<TGameState>
     {
         #region Constructeur
 
-        public RandomAgent(List<AGameAction<TGameState>> actions) : base(actions) { }
+        public RandomAgent(TGameRules rules) : base(rules) { }
 
         #endregion
 
@@ -20,7 +22,12 @@ namespace Common.Agent
         /// </summary>
         /// <param name="gameState">Etat de jeu actuel</param>
         /// <returns>L'action à jouer</returns>
-        public override AGameAction<TGameState> GetAction(TGameState gameState) => this._actions[Random.Range(0, this._actions.Count)];
+        public override AGameAction<TGameState> GetAction(TGameState gameState)
+        {
+            List<AGameAction<TGameState>> actions = this._rules.GetPossibleActions(gameState);
+
+            return actions[Random.Range(0, actions.Count)];
+        }
 
         #endregion
     }

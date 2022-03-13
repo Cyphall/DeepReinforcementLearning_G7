@@ -1,33 +1,33 @@
 ﻿using Common.Core;
-using System.Collections.Generic;
+using Sokoban.Game;
 using UnityEngine;
 
 namespace Sokoban.Agent
 {
-	public class PlayerAgent : AAgent<GameState>
-	{
-		public PlayerAgent(List<AGameAction<GameState>> actions) : base(actions) { }
+    public class PlayerAgent : AAgent<GameState, GameRules>
+    {
+        #region Constructeur
 
-		public override AGameAction<GameState> GetAction(GameState state)
-		{
-			if (Input.GetKeyDown(KeyCode.Z))
-			{
-				return new MoveUp();
-			}
-			if (Input.GetKeyDown(KeyCode.Q))
-			{
-				return new MoveLeft();
-			}
-			if (Input.GetKeyDown(KeyCode.S))
-			{
-				return new MoveDown();
-			}
-			if (Input.GetKeyDown(KeyCode.D))
-			{
-				return new MoveRight();
-			}
+        public PlayerAgent(GameRules rules) : base(rules) { }
 
-			return null;
-		}
-	}
+        #endregion
+
+        #region Méthodes publiques 
+
+        public override AGameAction<GameState> GetAction(GameState gameState)
+        {
+            if (Input.GetKeyDown(KeyCode.Z))
+                return this._rules.MoveUp;
+            if (Input.GetKeyDown(KeyCode.Q))
+                return this._rules.MoveLeft;
+            if (Input.GetKeyDown(KeyCode.S))
+                return this._rules.MoveDown;
+            if (Input.GetKeyDown(KeyCode.D))
+                return this._rules.MoveRight;
+
+            return null;
+        }
+
+        #endregion
+    }
 }

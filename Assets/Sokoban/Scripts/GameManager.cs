@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using Common.Core;
+﻿using Common.Core;
 using Common.Enumeration;
+using Sokoban.Game;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.WSA;
 
 namespace Sokoban
 {
@@ -18,6 +18,9 @@ namespace Sokoban
         private PlayerScript _player;
         private List<GameObject> _crateInstances = new List<GameObject>();
         private ALevelPreset _levelPreset;
+
+        public readonly GameRules GameRules = new GameRules();
+
         /// <summary>
         /// Stocke l'état du jeu actuel
         /// </summary>
@@ -53,9 +56,9 @@ namespace Sokoban
             {
                 Grid = _levelPreset.Grid,
                 AgentPos = _levelPreset.StartPosition,
-                CratePos =  _levelPreset.CrateStartPosition
+                CratePos = _levelPreset.CrateStartPosition
             };
-            
+
             int width = GameState.Grid.GetLength(0);
             int height = GameState.Grid.GetLength(1);
 
@@ -78,11 +81,9 @@ namespace Sokoban
                     _crateInstances[i].transform.position.y, GameState.CratePos[i].y);
             }
 
-            GameStatus status = GameState.Status;
-
-            if(status == GameStatus.Win)
+            if (GameState.Status == GameStatus.Win)
                 displayText.SetActive(true);
-            if (status == GameStatus.Lose)
+            else if (GameState.Status == GameStatus.Lose)
             {
                 displayText.GetComponent<Text>().text = "Agent lose";
                 displayText.SetActive(true);
