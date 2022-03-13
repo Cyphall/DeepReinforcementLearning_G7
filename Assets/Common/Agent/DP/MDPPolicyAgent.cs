@@ -73,8 +73,6 @@ namespace Common.Agent.DP
 
             this.InitializePossibleStates(initialGameState, baseStateValue);
             this.EvaluatePolicy();
-
-            // Fin de l'entraînement
         }
 
         #endregion
@@ -90,29 +88,31 @@ namespace Common.Agent.DP
 
             do
             {
-                delta = 0f;
-
-                for (int i = 0; i < this._gameStatePolicies.Count; ++i)
+                do
                 {
-                    TGameState gameState = this._gameStates[i];
+                    delta = 0f;
 
-                    if (gameState.Status == GameStatus.Playing)
+                    for (int i = 0; i < this._gameStatePolicies.Count; ++i)
                     {
-                        float value = this._gameStateValues[i];
-                        this._gameStateValues[i] = this.PolicyValue(gameState, this._gameStatePolicies[i]);
-                        delta = Math.Max(delta, Math.Abs(value - this._gameStateValues[i]));
+                        TGameState gameState = this._gameStates[i];
+
+                        if (gameState.Status == GameStatus.Playing)
+                        {
+                            float value = this._gameStateValues[i];
+                            this._gameStateValues[i] = this.PolicyValue(gameState, this._gameStatePolicies[i]);
+                            delta = Math.Max(delta, Math.Abs(value - this._gameStateValues[i]));
+                        }
                     }
                 }
+                while (delta >= this._differenceThreshold);
             }
-            while (delta >= this._differenceThreshold);
-
-            this.ImprovePolicy();
+            while (this.ImprovePolicy());
         }
 
         /// <summary>
         /// Améliore la stratégie actuelle
         /// </summary>
-        private void ImprovePolicy()
+        private bool ImprovePolicy()
         {
             bool stable = true;
 
@@ -145,8 +145,7 @@ namespace Common.Agent.DP
                 }
             }
 
-            if (!stable)
-                this.EvaluatePolicy();
+            return stable;
         }
 
         /// <summary>
