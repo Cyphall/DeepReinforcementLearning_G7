@@ -62,6 +62,8 @@ namespace GridWorld
                 case 1:
                     this._agent = new MDPValueAgent<GameState, GameRules>(this.GameRules, new BaseAgentPlugin(), this.GameState);
                     break;
+                case 2:
+                    break;
             }
 
 

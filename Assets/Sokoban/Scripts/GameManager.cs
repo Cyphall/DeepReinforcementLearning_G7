@@ -72,6 +72,8 @@ namespace Sokoban
                 case 1:
                     this._agent = new MDPValueAgent<GameState, GameRules>(this.GameRules, new BaseAgentPlugin(), this.GameState);
                     break;
+                case 2:
+                    break;
             }
 
             int width = GameState.Grid.GetLength(0);
@@ -84,7 +86,8 @@ namespace Sokoban
         {
             if (GameState.Status == GameStatus.Playing && this._playFrames > 30)
             {
-                this.ApplyAction(this._agent.GetAction(this.GameState));
+                if (_agent != null)
+                    this.ApplyAction(this._agent.GetAction(this.GameState));
                 this._playFrames = 0;
             }
             ++this._playFrames;
