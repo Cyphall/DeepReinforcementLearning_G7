@@ -27,7 +27,7 @@ namespace Common.Core
         }
 
         #endregion
-
+        
         #region Méthodes publiques abstraites
 
         /// <summary>

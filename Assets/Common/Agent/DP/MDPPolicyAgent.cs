@@ -2,8 +2,9 @@
 using Common.Enumeration;
 using System;
 using System.Collections.Generic;
-
+using System.Diagnostics;
 using Random = UnityEngine.Random;
+using Debug = UnityEngine.Debug;
 
 namespace Common.Agent.DP
 {
@@ -41,11 +42,22 @@ namespace Common.Agent.DP
         /// <param name="plugin">Branchement possédant la stratégie de récompense utilisée</param>
         /// <param name="devaluationFactor">Facteur de dévaluation de l'évaluation de la politique</param>
         /// <param name="differenceThreshold">Seuil de différence pour l'évaluation de la politique</param>
-        public MDPPolicyAgent(TGameRules rules, IGameAgentPlugin<TGameState> plugin, float devaluationFactor = 0.9f, float differenceThreshold = 0.25f) : base(rules)
+        public MDPPolicyAgent(TGameRules rules, IGameAgentPlugin<TGameState> plugin, TGameState gameState, float devaluationFactor = 0.9f, float differenceThreshold = 0.25f) : base(rules)
         {
             this._devaluationFactor = devaluationFactor;
             this._differenceThreshold = differenceThreshold;
             this._plugin = plugin;
+            //start
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+            this.Initialize(gameState);
+            stopwatch.Stop();
+
+            TimeSpan ts = stopwatch.Elapsed;
+            string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
+                ts.Hours, ts.Minutes, ts.Seconds,
+                ts.Milliseconds / 10);
+            Debug.Log(elapsedTime);
         }
 
         #endregion
@@ -75,8 +87,10 @@ namespace Common.Agent.DP
             this._gameStates.Clear();
             this._gameStateValues.Clear();
 
+
             this.InitializePossibleStates(initialGameState, baseStateValue);
             this.EvaluatePolicy();
+
         }
 
         #endregion
@@ -199,7 +213,7 @@ namespace Common.Agent.DP
     public class MDPPolicyAgent<TGameState> : MDPPolicyAgent<TGameState, AGameRules<TGameState>>
         where TGameState : IGameState<TGameState>
     {
-        public MDPPolicyAgent(AGameRules<TGameState> rules, IGameAgentPlugin<TGameState> plugin, float devaluationFactor = 0.9f, float differenceThreshold = 0.25F) :
-            base(rules, plugin, devaluationFactor, differenceThreshold) { }
+        public MDPPolicyAgent(AGameRules<TGameState> rules, IGameAgentPlugin<TGameState> plugin, TGameState gameState, float devaluationFactor = 0.9f, float differenceThreshold = 0.25F) :
+            base(rules, plugin, gameState, devaluationFactor, differenceThreshold) { }
     }
 }
