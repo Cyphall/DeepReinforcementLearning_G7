@@ -17,7 +17,7 @@ namespace GridWorld
         public ALevelPreset _levelPreset;
         public GameObject displayText;
         private PlayerScript _player;
-        private MDPPolicyAgent<GameState, GameRules> _agent;
+        private AAgent<GameState, GameRules> _agent;
         public int agentIndex;
 
         public readonly GameRules GameRules = new GameRules();
@@ -57,14 +57,13 @@ namespace GridWorld
             switch (agentIndex)
             {
                 case 0:
-                    this._agent = new MDPPolicyAgent<GameState, GameRules>(this.GameRules, new BaseAgentPlugin());
+                    this._agent = new MDPPolicyAgent<GameState, GameRules>(this.GameRules,  new BaseAgentPlugin(), this.GameState);
                     break;
-                /*case 1:
-                    this._agent = new MDPValueAgent<GameState, GameRules>(this.GameRules, new BaseAgentPlugin());
-                    break;*/
+                case 1:
+                    this._agent = new MDPValueAgent<GameState, GameRules>(this.GameRules, new BaseAgentPlugin(), this.GameState);
+                    break;
             }
-            //this._agent = new MDPPolicyAgent<GameState, GameRules>(this.GameRules, new BaseAgentPlugin());
-            this._agent.Initialize(this.GameState);
+
 
             int width = GameState.Grid.GetLength(0);
             int height = GameState.Grid.GetLength(1);

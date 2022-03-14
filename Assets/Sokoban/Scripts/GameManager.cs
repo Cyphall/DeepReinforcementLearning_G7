@@ -21,7 +21,7 @@ namespace Sokoban
         private PlayerScript _player;
         private List<GameObject> _crateInstances = new List<GameObject>();
         private ALevelPreset _levelPreset;
-        private MDPValueAgent<GameState, GameRules> _agent;
+        private AAgent<GameState, GameRules> _agent;
         private int _playFrames = 0;
 
         public readonly GameRules GameRules = new GameRules();
@@ -67,14 +67,12 @@ namespace Sokoban
             switch (agentIndex)
             {
                 case 0:
-                    this._agent = new MDPPolicyAgent<GameState, GameRules>(this.GameRules, new BaseAgentPlugin());
+                    this._agent = new MDPPolicyAgent<GameState, GameRules>(this.GameRules,  new BaseAgentPlugin(), this.GameState);
                     break;
-                /*case 1:
-                    this._agent = new MDPValueAgent<GameState, GameRules>(this.GameRules, new BaseAgentPlugin());
-                    break;*/
+                case 1:
+                    this._agent = new MDPValueAgent<GameState, GameRules>(this.GameRules, new BaseAgentPlugin(), this.GameState);
+                    break;
             }
-            //this._agent = new MDPPolicyAgent<GameState, GameRules>(this.GameRules, new BaseAgentPlugin());
-            this._agent.Initialize(this.GameState);
 
             int width = GameState.Grid.GetLength(0);
             int height = GameState.Grid.GetLength(1);

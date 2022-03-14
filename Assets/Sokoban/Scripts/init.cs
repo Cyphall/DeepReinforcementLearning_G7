@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Sokoban;
 using UnityEngine;
+using UnityEngine.Experimental.GlobalIllumination;
 using UnityEngine.UI;
 
 namespace Sokoban
