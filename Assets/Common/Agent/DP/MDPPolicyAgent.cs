@@ -88,10 +88,10 @@ namespace Common.Agent.DP
         /// </summary>
         private void EvaluatePolicy()
         {
-            float delta;
-
             do
             {
+                float delta;
+                
                 do
                 {
                     delta = 0f;
@@ -165,10 +165,10 @@ namespace Common.Agent.DP
             this._gameStatePolicies.Add(actions[Random.Range(0, actions.Count)]);
             this._gameStates.Add(initialGameState);
             this._gameStateValues.Add(baseStateValue);
-            /*
+
             if (initialGameState.Status != GameStatus.Playing)
                 return;
-            */
+
             foreach (AGameAction<TGameState> action in actions)
             {
                 TGameState gameState = action.Apply(initialGameState.Copy());
