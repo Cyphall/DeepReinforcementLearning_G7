@@ -21,7 +21,7 @@ namespace Common.Agent.DP
         protected readonly float _devaluationFactor;
 
         protected readonly float _differenceThreshold;
-        
+
         protected readonly List<AGameAction<TGameState>> _gameStatePolicies = new List<AGameAction<TGameState>>();
 
         protected readonly List<TGameState> _gameStates = new List<TGameState>();
@@ -88,10 +88,10 @@ namespace Common.Agent.DP
         /// </summary>
         private void EvaluatePolicy()
         {
+            float delta;
+
             do
             {
-                float delta;
-                
                 do
                 {
                     delta = 0f;

@@ -2,7 +2,8 @@
 using Common.Enumeration;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+
+using Random = UnityEngine.Random;
 
 namespace Common.Agent.DP
 {
@@ -21,6 +22,8 @@ namespace Common.Agent.DP
 
         protected readonly float _differenceThreshold;
         
+        protected readonly List<AGameAction<TGameState>> _gameStatePolicies = new List<AGameAction<TGameState>>();
+
         protected readonly List<TGameState> _gameStates = new List<TGameState>();
 
         protected readonly List<float> _gameStateValues = new List<float>();
@@ -56,26 +59,9 @@ namespace Common.Agent.DP
         /// <returns>L'action à jouer</returns>
         override public AGameAction<TGameState> GetAction(TGameState gameState)
         {
-            List<AGameAction<TGameState>> actions = this._rules.GetPossibleActions(gameState);
+            AGameAction<TGameState> action = this._gameStatePolicies[this._gameStates.IndexOf(gameState)];
 
-            if (actions.Count <= 1)
-                return actions.Count == 0 ? null : actions[0];
-
-            AGameAction<TGameState> bestAction = actions[0];
-            float bestValue = this.PolicyValue(gameState, bestAction);
-
-            foreach (AGameAction<TGameState> action in actions.Skip(1))
-            {
-                float value = this.PolicyValue(gameState, action);
-
-                if (bestValue < value)
-                {
-                    bestValue = value;
-                    bestAction = action;
-                }
-            }
-
-            return bestAction;
+            return action;
         }
 
         /// <summary>
@@ -85,6 +71,7 @@ namespace Common.Agent.DP
         /// <param name="baseStateValue">Valeur d'initialisation des états de jeu</param>
         public void Initialize(TGameState initialGameState, float baseStateValue = 0f)
         {
+            this._gameStatePolicies.Clear();
             this._gameStates.Clear();
             this._gameStateValues.Clear();
 
@@ -121,7 +108,10 @@ namespace Common.Agent.DP
                             float value = this.PolicyValue(gameState, action);
 
                             if (value > bestValue)
+                            {
                                 bestValue = value;
+                                this._gameStatePolicies[i] = action;
+                            }
                         }
 
                         this._gameStateValues[i] = bestValue;
@@ -141,8 +131,12 @@ namespace Common.Agent.DP
         {
             List<AGameAction<TGameState>> actions = this._rules.GetPossibleActions(initialGameState);
 
+            this._gameStatePolicies.Add(actions[Random.Range(0, actions.Count)]);
             this._gameStates.Add(initialGameState);
             this._gameStateValues.Add(baseStateValue);
+
+            if (initialGameState.Status != GameStatus.Playing)
+                return;
 
             foreach (AGameAction<TGameState> action in actions)
             {
@@ -174,6 +168,7 @@ namespace Common.Agent.DP
     public class MDPValueAgent<TGameState> : MDPValueAgent<TGameState, AGameRules<TGameState>>
         where TGameState : IGameState<TGameState>
     {
-        public MDPValueAgent(AGameRules<TGameState> rules, IGameAgentPlugin<TGameState> plugin, float gamma = 1, float theta = 0.25F) : base(rules, plugin, gamma, theta) { }
+        public MDPValueAgent(AGameRules<TGameState> rules, IGameAgentPlugin<TGameState> plugin, float devaluationFactor = 1, float differenceThreshold = 0.25F) :
+            base(rules, plugin, devaluationFactor, differenceThreshold) { }
     }
 }
