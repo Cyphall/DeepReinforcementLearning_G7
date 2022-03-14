@@ -1,18 +1,18 @@
 ﻿using Common.Core;
 using Common.Enumeration;
-using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using Random = UnityEngine.Random;
 
-namespace Common.Agent.DP
+namespace Common.Agent.MC
 {
     /// <summary>
     /// Implémentation d'un processus de décision markovien suivant une stratégie d'actions précalculée
     /// </summary>
     /// <typeparam name="TGameState">Etat de jeu manipulé</typeparam>
     /// <typeparam name="TGameRules">Règles de jeu utilisés</typeparam>
-    public class MDPPolicyAgent<TGameState, TGameRules> : AAgent<TGameState, TGameRules>
+    public class MCOnPolicyFirstVisitAgent<TGameState, TGameRules> : AAgent<TGameState, TGameRules>
         where TGameState : IGameState<TGameState>
         where TGameRules : AGameRules<TGameState>
     {
@@ -20,13 +20,13 @@ namespace Common.Agent.DP
 
         protected readonly float _devaluationFactor;
 
-        protected readonly float _differenceThreshold;
-
         protected readonly List<AGameAction<TGameState>> _gameStatePolicies = new List<AGameAction<TGameState>>();
 
         protected readonly List<TGameState> _gameStates = new List<TGameState>();
 
         protected readonly List<float> _gameStateValues = new List<float>();
+
+        protected readonly List<int> _gameStateVisits = new List<int>();
 
         protected readonly IGameAgentPlugin<TGameState> _plugin;
 
@@ -41,10 +41,8 @@ namespace Common.Agent.DP
         /// <param name="plugin">Branchement possédant la stratégie de récompense utilisée</param>
         /// <param name="devaluationFactor">Facteur de dévaluation de l'évaluation de la politique</param>
         /// <param name="differenceThreshold">Seuil de différence pour l'évaluation de la politique</param>
-        public MDPPolicyAgent(TGameRules rules, IGameAgentPlugin<TGameState> plugin, float devaluationFactor = 0.9f, float differenceThreshold = 0.25f) : base(rules)
+        public MCOnPolicyFirstVisitAgent(TGameRules rules, IGameAgentPlugin<TGameState> plugin, float devaluationFactor = 0.9f) : base(rules)
         {
-            this._devaluationFactor = devaluationFactor;
-            this._differenceThreshold = differenceThreshold;
             this._plugin = plugin;
         }
 
@@ -68,15 +66,15 @@ namespace Common.Agent.DP
         /// Initialise l'agent avec l'état de jeu initial
         /// </summary>
         /// <param name="initialGameState">Etat de jeu initial</param>
-        /// <param name="baseStateValue">Valeur d'initialisation des états de jeu</param>
-        public void Initialize(TGameState initialGameState, float baseStateValue = 0f)
+        /// <param name="episodes">Nombre de parties à simuler</param>
+        public void Initialize(TGameState initialGameState, int episodes)
         {
             this._gameStatePolicies.Clear();
             this._gameStates.Clear();
             this._gameStateValues.Clear();
 
-            this.InitializePossibleStates(initialGameState, baseStateValue);
-            this.EvaluatePolicy();
+            this.InitializePossibleStates(initialGameState);
+            this.EvaluatePolicy(episodes);
         }
 
         #endregion
@@ -86,85 +84,66 @@ namespace Common.Agent.DP
         /// <summary>
         /// Evalue la stratégie utilisée
         /// </summary>
-        private void EvaluatePolicy()
+        /// <param name="episodes">Nombre de parties à simuler</param>
+        private void EvaluatePolicy(int episodes)
         {
-            float delta;
-
-            do
+            for (int i = 0; i < episodes; ++i)
             {
-                do
+                (List<TGameState> states, List<float> rewards) = this.GenerateEpisode();
+                float valueAccumulation = 0;
+
+                for (int t = states.Count - 1; t >= 0; --t)
                 {
-                    delta = 0f;
+                    valueAccumulation += rewards[t + 1];
 
-                    for (int i = 0; i < this._gameStatePolicies.Count; ++i)
+                    if (!states.Take(t).Contains(states[t + 1]))
                     {
-                        TGameState gameState = this._gameStates[i];
+                        int index = this._gameStates.IndexOf(states[t + 1]);
 
-                        if (gameState.Status == GameStatus.Playing)
-                        {
-                            float value = this._gameStateValues[i];
-                            this._gameStateValues[i] = this.PolicyValue(gameState, this._gameStatePolicies[i]);
-                            delta = Math.Max(delta, Math.Abs(value - this._gameStateValues[i]));
-                        }
+                        this._gameStateValues[index] += valueAccumulation;
+                        ++this._gameStateVisits[index];
                     }
                 }
-                while (delta >= this._differenceThreshold);
             }
-            while (!this.ImprovePolicy());
-        }
-
-        /// <summary>
-        /// Améliore la stratégie actuelle
-        /// </summary>
-        /// <returns>TRUE si la stratégie est stable, FALSE sinon</returns>
-        private bool ImprovePolicy()
-        {
-            bool stable = true;
 
             for (int i = 0; i < this._gameStates.Count; ++i)
+                this._gameStateValues[i] /= this._gameStateVisits[i];
+        }
+
+        private (List<TGameState>, List<float>) GenerateEpisode()
+        {
+            List<TGameState> states = new List<TGameState>();
+            List<float> rewards = new List<float>();
+
+            TGameState currentGameState = this._gameStates[0];
+
+            while (currentGameState.Status == GameStatus.Playing)
             {
-                TGameState gameState = this._gameStates[i];
+                int index = this._gameStates.IndexOf(currentGameState);
+                AGameAction<TGameState> action = this._gameStatePolicies[index];
+                TGameState nextGameState = this._rules.Tick(action, currentGameState);
 
-                if (gameState.Status == GameStatus.Playing)
-                {
-                    AGameAction<TGameState> oldBestAction = this._gameStatePolicies[i];
-                    AGameAction<TGameState> bestAction = oldBestAction;
-                    float bestValue = this._gameStateValues[i];
+                states.Add(currentGameState);
+                rewards.Add(this.PolicyValue(currentGameState, action, nextGameState));
 
-
-                    foreach (AGameAction<TGameState> action in this._rules.GetPossibleActions(gameState))
-                    {
-                        float value = this.PolicyValue(gameState, action);
-
-                        if (value > bestValue)
-                        {
-                            bestValue = value;
-                            bestAction = action;
-                        }
-                    }
-
-                    this._gameStatePolicies[i] = bestAction;
-
-                    if (oldBestAction != bestAction)
-                        stable = false;
-                }
+                currentGameState = nextGameState;
             }
 
-            return stable;
+            return (states, rewards);
         }
 
         /// <summary>
         /// Calcule tous les états possibles à partir d'un état initial
         /// </summary>
         /// <param name="initialGameState">Etat de jeu initial</param>
-        /// <param name="baseStateValue">Valeur de base pour l'initialisation des données d'un état de jeu</param>
-        private void InitializePossibleStates(TGameState initialGameState, float baseStateValue)
+        private void InitializePossibleStates(TGameState initialGameState)
         {
             List<AGameAction<TGameState>> actions = this._rules.GetPossibleActions(initialGameState);
 
             this._gameStatePolicies.Add(actions[Random.Range(0, actions.Count)]);
             this._gameStates.Add(initialGameState);
-            this._gameStateValues.Add(baseStateValue);
+            this._gameStateValues.Add(0);
+            this._gameStateVisits.Add(0);
 
             if (initialGameState.Status != GameStatus.Playing)
                 return;
@@ -174,7 +153,7 @@ namespace Common.Agent.DP
                 TGameState gameState = action.Apply(initialGameState.Copy());
 
                 if (!this._gameStates.Contains(gameState))
-                    this.InitializePossibleStates(gameState, baseStateValue);
+                    this.InitializePossibleStates(gameState);
             }
         }
 
@@ -183,23 +162,21 @@ namespace Common.Agent.DP
         /// </summary>
         /// <param name="gameState">Etat de jeu utilisé</param>
         /// <param name="policy">Action à appliquer</param>
+        /// <param name="nextGameState">Etat de jeu suivant</param>
         /// <returns>La valeur de l'application de cette action</returns>
-        private float PolicyValue(TGameState gameState, AGameAction<TGameState> policy)
+        private float PolicyValue(TGameState gameState, AGameAction<TGameState> policy, TGameState nextGameState)
         {
-            if (gameState.Status != GameStatus.Playing)
-                return this._plugin.Reward(gameState);
-
-            TGameState nextGameState = this._rules.Tick(policy, gameState);
             return this._plugin.TransitionReward(gameState, policy, nextGameState) + this._devaluationFactor * this._gameStateValues[this._gameStates.IndexOf(nextGameState)];
         }
 
         #endregion
     }
 
-    public class MDPPolicyAgent<TGameState> : MDPPolicyAgent<TGameState, AGameRules<TGameState>>
+    public class MCOnPolicyFirstVisitAgent<TGameState> : MCOnPolicyFirstVisitAgent<TGameState, AGameRules<TGameState>>
         where TGameState : IGameState<TGameState>
     {
-        public MDPPolicyAgent(AGameRules<TGameState> rules, IGameAgentPlugin<TGameState> plugin, float devaluationFactor = 0.9f, float differenceThreshold = 0.25F) :
-            base(rules, plugin, devaluationFactor, differenceThreshold) { }
+        public MCOnPolicyFirstVisitAgent(AGameRules<TGameState> rules, IGameAgentPlugin<TGameState> plugin, float devaluationFactor = 0.9f) :
+            base(rules, plugin, devaluationFactor)
+        { }
     }
 }

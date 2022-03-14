@@ -41,7 +41,7 @@ namespace Common.Agent.DP
         /// <param name="plugin">Branchement possédant la stratégie de récompense utilisée</param>
         /// <param name="devaluationFactor">Facteur de dévaluation de l'évaluation de la politique</param>
         /// <param name="differenceThreshold">Seuil de différence pour l'évaluation de la politique</param>
-        public MDPValueAgent(TGameRules rules, IGameAgentPlugin<TGameState> plugin, float devaluationFactor = 1f, float differenceThreshold = 0.25f) : base(rules)
+        public MDPValueAgent(TGameRules rules, IGameAgentPlugin<TGameState> plugin, float devaluationFactor = 0.9f, float differenceThreshold = 0.25f) : base(rules)
         {
             this._devaluationFactor = devaluationFactor;
             this._differenceThreshold = differenceThreshold;
@@ -158,7 +158,7 @@ namespace Common.Agent.DP
             if (gameState.Status != GameStatus.Playing)
                 return this._plugin.Reward(gameState);
 
-            TGameState nextGameState = policy.Apply(gameState.Copy());
+            TGameState nextGameState = this._rules.Tick(policy, gameState);
             return this._plugin.TransitionReward(gameState, policy, nextGameState) + this._devaluationFactor * this._gameStateValues[this._gameStates.IndexOf(nextGameState)];
         }
 
@@ -168,7 +168,7 @@ namespace Common.Agent.DP
     public class MDPValueAgent<TGameState> : MDPValueAgent<TGameState, AGameRules<TGameState>>
         where TGameState : IGameState<TGameState>
     {
-        public MDPValueAgent(AGameRules<TGameState> rules, IGameAgentPlugin<TGameState> plugin, float devaluationFactor = 1, float differenceThreshold = 0.25F) :
+        public MDPValueAgent(AGameRules<TGameState> rules, IGameAgentPlugin<TGameState> plugin, float devaluationFactor = 0.9f, float differenceThreshold = 0.25F) :
             base(rules, plugin, devaluationFactor, differenceThreshold) { }
     }
 }
