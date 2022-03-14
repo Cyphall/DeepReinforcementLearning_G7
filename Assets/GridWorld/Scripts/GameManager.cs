@@ -1,4 +1,5 @@
-﻿using Common.Agent.DP;
+﻿using System;
+using Common.Agent.DP;
 using Common.Agent.MC;
 using Common.Core;
 using Common.Enumeration;
@@ -19,6 +20,8 @@ namespace GridWorld
         private PlayerScript _player;
         private AAgent<GameState, GameRules> _agent;
         public int agentIndex;
+
+        private bool _finished = false;
 
         public readonly GameRules GameRules = new GameRules();
 
@@ -62,6 +65,8 @@ namespace GridWorld
                 case 1:
                     this._agent = new MDPValueAgent<GameState, GameRules>(this.GameRules, new BaseAgentPlugin(), this.GameState);
                     break;
+                case 2:
+                    break;
             }
 
 
@@ -75,7 +80,9 @@ namespace GridWorld
         {
             if (GameState.Status == GameStatus.Playing && this._playFrames > 30)
             {
-                this.ApplyAction(this._agent.GetAction(this.GameState));
+                AGameAction<GameState> action = this._agent.GetAction(this.GameState);
+                this.ApplyAction(action);
+                _agent?.StatsRecorder.ActionPlayed(action);
                 this._playFrames = 0;
             }
             ++this._playFrames;
@@ -93,12 +100,20 @@ namespace GridWorld
             _player.transform.position = new Vector3(agentPos.x, _player.transform.position.y, agentPos.y);
             GameStatus status = GameState.Status;
 
-            if(status == GameStatus.Win)
-                displayText.SetActive(true);
-            else if (status == GameStatus.Lose)
+            if (status != GameStatus.Playing && !_finished)
             {
-                displayText.GetComponent<Text>().text = "Agent lose";
-                displayText.SetActive(true);
+                _finished = true;
+                if (status == GameStatus.Win)
+                {
+                    displayText.SetActive(true);
+                }
+                else if (status == GameStatus.Lose)
+                {
+                    displayText.GetComponent<Text>().text = "Agent lose";
+                    displayText.SetActive(true);
+                }
+
+                _agent?.StatsRecorder.GetResult().ToJson(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/RL_stats_result.json");
             }
         }
     }

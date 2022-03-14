@@ -4,6 +4,7 @@
 	{
 		MDPPolicy,
 		MDPValue,
+		Player,
 		MCESOnFirst,
 		MCESOffFirst,
 		MCESOnEvery,
