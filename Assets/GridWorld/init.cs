@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Sokoban;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace GridWorld
@@ -17,6 +18,11 @@ namespace GridWorld
         {
             GameObject gameManager = Instantiate(GameManager);
             gameManager.GetComponent<GameManager>().displayText = displayText;
+        }
+
+        public void ToInitScene()
+        {
+            SceneManager.LoadScene(0);
         }
 
     }

@@ -2,7 +2,8 @@
 using Common.Enumeration;
 using System;
 using System.Collections.Generic;
-
+using System.Diagnostics;
+using Debug = UnityEngine.Debug;
 using Random = UnityEngine.Random;
 
 namespace Common.Agent.DP
@@ -47,7 +48,19 @@ namespace Common.Agent.DP
             this._differenceThreshold = differenceThreshold;
             this._plugin = plugin;
             
+            
+            //start
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+            
             this.Initialize(gameState);
+            
+            stopwatch.Stop();
+            TimeSpan ts = stopwatch.Elapsed;
+            string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
+                ts.Hours, ts.Minutes, ts.Seconds,
+                ts.Milliseconds / 10);
+            Debug.Log(elapsedTime);
 
         }
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Sokoban;
 using UnityEngine;
 using UnityEngine.Experimental.GlobalIllumination;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Sokoban
@@ -20,5 +21,10 @@ namespace Sokoban
             gameManager.GetComponent<GameManager>().displayText = displayText;
         }
 
+        public void ToInitScene()
+        {
+            SceneManager.LoadScene(0);
+        }
     }
+    
 }

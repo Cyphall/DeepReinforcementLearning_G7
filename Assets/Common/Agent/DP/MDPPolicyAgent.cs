@@ -2,8 +2,9 @@
 using Common.Enumeration;
 using System;
 using System.Collections.Generic;
-
+using System.Diagnostics;
 using Random = UnityEngine.Random;
+using Debug = UnityEngine.Debug;
 
 namespace Common.Agent.DP
 {
@@ -46,8 +47,17 @@ namespace Common.Agent.DP
             this._devaluationFactor = devaluationFactor;
             this._differenceThreshold = differenceThreshold;
             this._plugin = plugin;
-
+            //start
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
             this.Initialize(gameState);
+            stopwatch.Stop();
+
+            TimeSpan ts = stopwatch.Elapsed;
+            string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
+                ts.Hours, ts.Minutes, ts.Seconds,
+                ts.Milliseconds / 10);
+            Debug.Log(elapsedTime);
         }
 
         #endregion
@@ -77,8 +87,10 @@ namespace Common.Agent.DP
             this._gameStates.Clear();
             this._gameStateValues.Clear();
 
+
             this.InitializePossibleStates(initialGameState, baseStateValue);
             this.EvaluatePolicy();
+
         }
 
         #endregion
