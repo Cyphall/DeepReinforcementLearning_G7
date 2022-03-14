@@ -110,12 +110,13 @@ namespace Common.Agent.DP
                 }
                 while (delta >= this._differenceThreshold);
             }
-            while (this.ImprovePolicy());
+            while (!this.ImprovePolicy());
         }
 
         /// <summary>
         /// Améliore la stratégie actuelle
         /// </summary>
+        /// <returns>TRUE si la stratégie est stable, FALSE sinon</returns>
         private bool ImprovePolicy()
         {
             bool stable = true;
