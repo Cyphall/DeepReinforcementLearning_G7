@@ -1,3 +1,5 @@
+using Common.Benchmark;
+
 namespace Common.Core
 {
     /// <summary>
@@ -12,6 +14,8 @@ namespace Common.Core
         #region Champs
 
         protected readonly TGameRules _rules;
+
+        public StatsRecorder<TGameState> StatsRecorder = new StatsRecorder<TGameState>();
 
         #endregion
 

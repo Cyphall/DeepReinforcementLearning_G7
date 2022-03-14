@@ -48,16 +48,9 @@ namespace Common.Agent.DP
             this._differenceThreshold = differenceThreshold;
             this._plugin = plugin;
             //start
-            Stopwatch stopwatch = new Stopwatch();
-            stopwatch.Start();
+            StatsRecorder.TrainingStarted();
             this.Initialize(gameState);
-            stopwatch.Stop();
-
-            TimeSpan ts = stopwatch.Elapsed;
-            string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
-                ts.Hours, ts.Minutes, ts.Seconds,
-                ts.Milliseconds / 10);
-            Debug.Log(elapsedTime);
+            StatsRecorder.TrainingFinished();
         }
 
         #endregion
@@ -106,8 +99,10 @@ namespace Common.Agent.DP
 
             do
             {
+                StatsRecorder.NewEvaluation();
                 do
                 {
+                    StatsRecorder.NewIteration();
                     delta = 0f;
 
                     for (int i = 0; i < this._gameStatePolicies.Count; ++i)

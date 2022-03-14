@@ -1,4 +1,5 @@
-﻿using Common.Agent.DP;
+﻿using System;
+using Common.Agent.DP;
 using Common.Core;
 using Common.Enumeration;
 using Sokoban.Agent.Plugin;
@@ -23,6 +24,8 @@ namespace Sokoban
         private ALevelPreset _levelPreset;
         private AAgent<GameState, GameRules> _agent;
         private int _playFrames = 0;
+
+        private bool _finished = false;
 
         public readonly GameRules GameRules = new GameRules();
 
@@ -87,7 +90,11 @@ namespace Sokoban
             if (GameState.Status == GameStatus.Playing && this._playFrames > 30)
             {
                 if (_agent != null)
-                    this.ApplyAction(this._agent.GetAction(this.GameState));
+                {
+                    AGameAction<GameState> action = this._agent.GetAction(this.GameState);
+                    this.ApplyAction(action);
+                    _agent?.StatsRecorder.ActionPlayed(action);
+                }
                 this._playFrames = 0;
             }
             ++this._playFrames;
@@ -108,13 +115,21 @@ namespace Sokoban
                 _crateInstances[i].transform.position = new Vector3(GameState.CratePos[i].x,
                     _crateInstances[i].transform.position.y, GameState.CratePos[i].y);
             }
-
-            if (GameState.Status == GameStatus.Win)
-                displayText.SetActive(true);
-            else if (GameState.Status == GameStatus.Lose)
+            
+            if (GameState.Status != GameStatus.Playing && !_finished)
             {
-                displayText.GetComponent<Text>().text = "Agent lose";
-                displayText.SetActive(true);
+                _finished = true;
+                if (GameState.Status == GameStatus.Win)
+                {
+                    displayText.SetActive(true);
+                }
+                else if (GameState.Status == GameStatus.Lose)
+                {
+                    displayText.GetComponent<Text>().text = "Agent lose";
+                    displayText.SetActive(true);
+                }
+
+                _agent?.StatsRecorder.GetResult().ToJson(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/RL_stats_result.json");
             }
         }
     }
