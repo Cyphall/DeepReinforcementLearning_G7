@@ -1,4 +1,4 @@
-from bokeh.plotting import figure, show
+from bokeh.plotting import figure, show, output_file
 import json
 import os
 
@@ -11,6 +11,7 @@ def show_iterations(iterations):
 	
 	p.line(iterations_num, iterations, line_width=2)
 	
+	output_file("plot1.html")
 	show(p)
 
 def show_actions(actions):
@@ -26,6 +27,7 @@ def show_actions(actions):
 	p = figure(title="Action counts", y_axis_label="Use count", x_range=action_names)
 	p.vbar(x=nums, top=action_counts, width=0.5, bottom=0, color="red")
 	
+	output_file("plot2.html")
 	show(p)
 
 desktop = os.path.join(os.path.join(os.environ['USERPROFILE']), 'Desktop')
