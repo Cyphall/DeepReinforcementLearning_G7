@@ -517,7 +517,7 @@ MonoBehaviour:
   - TileType: 3
     Prefab: {fileID: 2024507085414774632, guid: 7cd76077c6a53f1439034b9ab215e536, type: 3}
   playerPrefab: {fileID: 8699751045289586054, guid: 9d9a7b94f4fd3bb4898176314512d4d5, type: 3}
-  _levelPreset: {fileID: 8280963156250294551, guid: 3a1953a13464c624481b41d22cd84225, type: 3}
+  _levelPreset: {fileID: 6714930843586222041, guid: 98696b4cdf3b5204fafebe7fb2d061a6, type: 3}
   displayText: {fileID: 1367691742}
 --- !u!4 &1751713712
 Transform:
