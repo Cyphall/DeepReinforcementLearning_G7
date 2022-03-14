@@ -4,5 +4,14 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/InitScene.unity
+    guid: 0de73fb45ba61e143a46de6ed1ea3573
+  - enabled: 1
+    path: Assets/GridWorld/Scenes/GridWorldScene.unity
+    guid: 9fc0d4010bbf28b4594072e72b8655ab
+  - enabled: 1
+    path: Assets/Sokoban/Scenes/SokobanScene.unity
+    guid: 868af557b0afd6e4b8f88bbd1af55d70
   m_configObjects: {}

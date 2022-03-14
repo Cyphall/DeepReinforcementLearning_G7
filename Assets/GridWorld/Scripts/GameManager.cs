@@ -17,7 +17,8 @@ namespace GridWorld
         public ALevelPreset _levelPreset;
         public GameObject displayText;
         private PlayerScript _player;
-        private MCOnPolicyFirstVisitAgent<GameState, GameRules> _agent;
+        private MDPPolicyAgent<GameState, GameRules> _agent;
+        public int agentIndex;
 
         public readonly GameRules GameRules = new GameRules();
 
@@ -53,8 +54,17 @@ namespace GridWorld
                 AgentPos = _levelPreset.StartPosition
             };
 
-            this._agent = new MCOnPolicyFirstVisitAgent<GameState, GameRules>(this.GameRules, new BaseAgentPlugin());
-            this._agent.Initialize(this.GameState, 3);
+            switch (agentIndex)
+            {
+                case 0:
+                    this._agent = new MDPPolicyAgent<GameState, GameRules>(this.GameRules, new BaseAgentPlugin());
+                    break;
+                /*case 1:
+                    this._agent = new MDPValueAgent<GameState, GameRules>(this.GameRules, new BaseAgentPlugin());
+                    break;*/
+            }
+            //this._agent = new MDPPolicyAgent<GameState, GameRules>(this.GameRules, new BaseAgentPlugin());
+            this._agent.Initialize(this.GameState);
 
             int width = GameState.Grid.GetLength(0);
             int height = GameState.Grid.GetLength(1);
