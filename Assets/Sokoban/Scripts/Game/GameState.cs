@@ -11,7 +11,7 @@ namespace Sokoban.Game
         public Vector2Int AgentPos;
         public Vector2Int[] CratePos;
         public int CurrentIteration = 0;
-        public int NbMaxIteration = 10000;
+        public int NbMaxIteration = 100;
 
         public bool AnyEntity(int x, int y)
         {

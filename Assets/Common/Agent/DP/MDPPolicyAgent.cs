@@ -57,8 +57,12 @@ namespace Common.Agent.DP
         /// </summary>
         /// <param name="gameState">Etat de jeu actuel</param>
         /// <returns>L'action à jouer</returns>
-        override public AGameAction<TGameState> GetAction(TGameState gameState) =>
-            this._gameStatePolicies[this._gameStates.IndexOf(gameState)];
+        override public AGameAction<TGameState> GetAction(TGameState gameState)
+        {
+            AGameAction<TGameState> action = this._gameStatePolicies[this._gameStates.IndexOf(gameState)];
+
+            return action;
+        }
 
         /// <summary>
         /// Initialise l'agent avec l'état de jeu initial
@@ -122,10 +126,10 @@ namespace Common.Agent.DP
 
                 if (gameState.Status == GameStatus.Playing)
                 {
-                    AGameAction<TGameState> oldAction = this._gameStatePolicies[i];
+                    AGameAction<TGameState> oldBestAction = this._gameStatePolicies[i];
                     float bestValue = this._gameStateValues[i];
 
-                    AGameAction<TGameState> bestAction = oldAction;
+                    AGameAction<TGameState> bestAction = oldBestAction;
 
                     foreach (AGameAction<TGameState> action in this._rules.GetPossibleActions(gameState))
                     {
@@ -140,7 +144,7 @@ namespace Common.Agent.DP
 
                     this._gameStatePolicies[i] = bestAction;
 
-                    if (oldAction != this._gameStatePolicies[i])
+                    if (oldBestAction != this._gameStatePolicies[i])
                         stable = false;
                 }
             }
@@ -160,7 +164,10 @@ namespace Common.Agent.DP
             this._gameStatePolicies.Add(actions[Random.Range(0, actions.Count)]);
             this._gameStates.Add(initialGameState);
             this._gameStateValues.Add(baseStateValue);
-
+            /*
+            if (initialGameState.Status != GameStatus.Playing)
+                return;
+            */
             foreach (AGameAction<TGameState> action in actions)
             {
                 TGameState gameState = action.Apply(initialGameState.Copy());
