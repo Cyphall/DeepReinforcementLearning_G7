@@ -12,7 +12,6 @@ namespace GridWorld.Game
         public readonly MoveLeft MoveLeft = new MoveLeft();
         public readonly MoveRight MoveRight = new MoveRight();
         public readonly MoveUp MoveUp = new MoveUp();
-        public readonly Wait Wait = new Wait();
 
         public readonly List<AGameAction<GameState>> EveryActions;
 
@@ -28,7 +27,6 @@ namespace GridWorld.Game
                 this.MoveLeft,
                 this.MoveRight,
                 this.MoveUp,
-                this.Wait,
             };
         }
 

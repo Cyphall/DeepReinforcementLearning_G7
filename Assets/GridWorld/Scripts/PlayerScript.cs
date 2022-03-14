@@ -37,10 +37,6 @@ namespace GridWorld
                 GameManager.ApplyAction(_nextAction);
                 _nextAction = null;
             }
-            else
-            {
-                GameManager.ApplyAction(this.GameManager.GameRules.Wait);
-            }
         }
     }
 }

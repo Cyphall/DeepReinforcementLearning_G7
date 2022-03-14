@@ -117,21 +117,8 @@ namespace Common.Agent.DP
                     if (gameState.Status == GameStatus.Playing)
                     {
                         float oldValue = this._gameStateValues[i];
-                        float bestValue = oldValue;
-
-                        foreach (AGameAction<TGameState> action in this._rules.GetPossibleActions(gameState))
-                        {
-                            float value = this.PolicyValue(gameState, action);
-
-                            if (value > bestValue)
-                            {
-                                bestValue = value;
-                                this._gameStatePolicies[i] = action;
-                            }
-                        }
-
-                        this._gameStateValues[i] = bestValue;
-                        delta = Math.Max(delta, Math.Abs(oldValue - bestValue));
+                        this.Propagate(gameState, new List<TGameState>() { gameState });
+                        delta = Math.Max(delta, Math.Abs(oldValue - this._gameStateValues[i]));
                     }
                 }
             }
@@ -156,7 +143,7 @@ namespace Common.Agent.DP
 
             foreach (AGameAction<TGameState> action in actions)
             {
-                TGameState gameState = action.Apply(initialGameState.Copy());
+                TGameState gameState = this._rules.Tick(action, initialGameState);
 
                 if (!this._gameStates.Contains(gameState))
                     this.InitializePossibleStates(gameState, baseStateValue);
@@ -164,18 +151,38 @@ namespace Common.Agent.DP
         }
 
         /// <summary>
-        /// Calcule la valeur pour une action appliquée en fonction d'un état de jeu
+        /// Propage la valeur d'un état de jeu pour toutes les actions possibles à jouer
         /// </summary>
         /// <param name="gameState">Etat de jeu utilisé</param>
-        /// <param name="policy">Action à appliquer</param>
-        /// <returns>La valeur de l'application de cette action</returns>
-        private float PolicyValue(TGameState gameState, AGameAction<TGameState> policy)
+        private void Propagate(TGameState gameState, List<TGameState> visitedStates)
         {
-            if (gameState.Status != GameStatus.Playing)
-                return this._plugin.Reward(gameState);
+            int index = this._gameStates.IndexOf(gameState);
 
-            TGameState nextGameState = this._rules.Tick(policy, gameState);
-            return this._plugin.TransitionReward(gameState, policy, nextGameState) + this._devaluationFactor * this._gameStateValues[this._gameStates.IndexOf(nextGameState)];
+            if (gameState.Status != GameStatus.Playing)
+            {
+                this._gameStateValues[index] = this._plugin.Reward(gameState);
+                return;
+            }
+
+            foreach (AGameAction<TGameState> action in this._rules.GetPossibleActions(gameState))
+            {
+                TGameState nextGameState = this._rules.Tick(action, gameState);
+
+                if (!visitedStates.Contains(nextGameState))
+                {
+                    visitedStates.Add(nextGameState);
+                    this.Propagate(nextGameState, visitedStates);
+                }
+
+                float value = this._plugin.TransitionReward(gameState, action, nextGameState) + this._devaluationFactor * this._gameStateValues[this._gameStates.IndexOf(nextGameState)];
+
+                if (value > this._gameStateValues[index])
+                {
+                    this._gameStateValues[index] = value;
+                    this._gameStatePolicies[index] = action;
+                }
+            }
+
         }
 
         #endregion
